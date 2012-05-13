@@ -1,4 +1,4 @@
-num_pregnant,glu_goncentration,blood_pressure,skin_thickness,insulin,mass_index,pedigree_function,age,class
+num_pregnant,glu_concentration,blood_pressure,skin_thickness,insulin,mass_index,pedigree_function,age,class
 0.352941,0.743719,0.590164,0.353535,0,0.500745,0.234415,0.483333,class1
 0.058824,0.427136,0.540984,0.292929,0,0.396423,0.116567,0.166667,class0
 0.470588,0.919598,0.52459,0,0,0.347243,0.253629,0.183333,class1
