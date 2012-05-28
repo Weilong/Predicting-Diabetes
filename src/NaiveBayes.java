@@ -6,15 +6,15 @@ import java.util.Iterator;
 
 public class NaiveBayes
 {
-	//private ArrayList<String> headers;
+	private ArrayList<String> attributes;
 	private HashMap<String,ArrayList<Double>> meanMap;
 	private HashMap<String,ArrayList<Double>> SDMap;
 	private HashMap<String,Double> classPriors;
 	private HashMap<String,Integer> numClass;
 	
-	public NaiveBayes() throws FileNotFoundException
+	public NaiveBayes(ArrayList<String> attributes) throws FileNotFoundException
 	{
-		//headers = new ArrayList<String>();
+		this.attributes = attributes;
 		meanMap = new HashMap<String,ArrayList<Double>>();
 		SDMap = new HashMap<String,ArrayList<Double>>();
 		classPriors = new HashMap<String,Double>();
@@ -106,10 +106,9 @@ public class NaiveBayes
 			ArrayList<Double> sdList = SDMap.get(className);	
 			
 			for (int i=0;i<meanList.size();i++)
-				likelihood*= PDF(Double.parseDouble(values[i]),meanList.get(i),sdList.get(i));
-			likelihood*=classPriors.get(className);
-			System.out.println(className);
-			System.out.println(likelihood);
+				likelihood*= pdf(Double.parseDouble(values[i]),meanList.get(i),sdList.get(i));
+			likelihood*=classPriors.get(className);//System.out.println();
+			
 			if (likelihood>maxProb)
 			{
 				maxProb = likelihood;
@@ -127,52 +126,43 @@ public class NaiveBayes
 		classPriors.clear();
 	}
 	
-	private double PDF(double x,double mean,double sd)
+	private double pdf(double x,double mean,double sd)
 	{
-		//System.out.println("x: "+ x +" mean: "+mean+" sd: "+sd);
-		//System.out.println(1/(sd*Math.sqrt(2*Math.PI))*Math.exp(-Math.pow(x-mean, 2)/2*Math.pow(sd, 2)));
-		return 1/(sd*Math.sqrt(2*Math.PI))*Math.exp(-Math.pow(x-mean, 2)/2*Math.pow(sd, 2));
-	}
-	
-	public ArrayList<Double> getMeans(String className)
-	{
-		return meanMap.get(className);	
-	}
-	
-	public ArrayList<Double> getSD(String className,String attribute)
-	{
-		return meanMap.get(className);
+		return 1/(sd*Math.sqrt(2*Math.PI))*Math.exp(-Math.pow(x-mean, 2)/(2*Math.pow(sd, 2)));
 	}
 	
 	public String toString()
 	{
 		System.out.println("Mean table:");
-		
+		System.out.println();
+		for (String attribute:attributes)
+			System.out.printf("%17s",attribute);
 		System.out.println();
 		for (Iterator<String> it = meanMap.keySet().iterator();it.hasNext();)
 		{
 			String className = it.next();
 			ArrayList<Double> list = meanMap.get(className);
-			for (double item:list)
-				System.out.format("%.4f ",item);
-			System.out.print(className);
+			for (double value:list)
+				System.out.printf("%17.4f",value);
+			System.out.printf("%17s",className);
 			System.out.println();
 		}
 		System.out.println();
 		
 		System.out.println("Standard Deviation table:");
-		
+		System.out.println();
+		for (String attribute:attributes)
+			System.out.printf("%17s",attribute);
 		System.out.println();
 		for (Iterator<String> it = SDMap.keySet().iterator();it.hasNext();)
 		{
 			String className = it.next();
 			ArrayList<Double> list = SDMap.get(className);
-			for (double item:list)
-				System.out.format("%.4f ",item);
-			System.out.print(className);
+			for (double value:list)
+				System.out.printf("%17.4f",value);
+			System.out.printf("%17s",className);
 			System.out.println();
 		}
-		
 		return "";
 	}
 }

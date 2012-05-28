@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class ClassifierApplication
@@ -53,35 +54,10 @@ public class ClassifierApplication
 		int strat[] = new int[folds];
 		int stratPos[] = new int[folds];
 		String newRecord;
-		NaiveBayes nb = new NaiveBayes();
+		NumberFormat nf = NumberFormat.getPercentInstance();
+		NaiveBayes nb = new NaiveBayes(attributes);
 		
-		readDataSet();
-		dataSet.readLine();	//skip header line
-		newRecord = dataSet.readLine();
-		
-		while(newRecord!=null)
-		{
-				nb.addTrainingData(newRecord);
-				newRecord = dataSet.readLine();
-		}
-		dataSet.close();
-		nb.training();
-		System.out.println(nb);
-		
-		readDataSet();
-		dataSet.readLine();	//skip header line
-		newRecord = dataSet.readLine();
-		int correctInstances = 0;
-		
-		while(newRecord!=null)
-		{
-					if(nb.testing(newRecord))
-						correctInstances++;
-					newRecord = dataSet.readLine();
-		}
-		dataSet.close();
-		System.out.format("accuracy: %.4f",(double)correctInstances/768);
-		/*for (int i=0;i<folds;i++)
+		for (int i=0;i<folds;i++)
 			strat[i]=numInstance/folds;
 		for (int i=0;i<numInstance%folds;i++)
 			strat[strat.length-1-i]++;
@@ -122,7 +98,7 @@ public class ClassifierApplication
 			}
 			dataSet.close();
 			nb.training();
-			//System.out.println(nb);
+			System.out.println(nb);
 			
 			//testing
 			readDataSet();
@@ -149,12 +125,14 @@ public class ClassifierApplication
 				instanceNumber++;
 			}
 			dataSet.close();
-			System.out.format("%d folds accuracy: %.4f",(i+1),(double)correctInstances/(double)strat[i]);
+			
+			nf.setMinimumFractionDigits(4);
+			System.out.println((i+1) + ((i+1)==1?" fold":" folds")+" accuracy: "+ nf.format((double)correctInstances/(double)strat[i]));
 			System.out.println();
 			accuracySum+=(double)correctInstances/(double)strat[i];
 			nb.reset();
 		}
-		System.out.format("Average accuracy over the %d runs: %.4f",folds,accuracySum/folds);*/
+		System.out.println("Average accuracy over the "+folds+" runs: "+nf.format(accuracySum/folds));
 	}
 	
 	public static void main(String[] args) throws IOException
