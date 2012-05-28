@@ -1,0 +1,2 @@
+cd bin
+java NB_KFold $1 $2

@@ -5,20 +5,16 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class ClassifierApplication
+public class NB_KFold
 {
 	private String fileName;
-	private String validation;
-	private String algorithm;
 	private BufferedReader dataSet;
 	private ArrayList<String> attributes;
 	private int numInstance;
 	
-	public ClassifierApplication(String filename) throws IOException
+	public NB_KFold(String filename) throws IOException
 	{
 		this.fileName = filename;
-		//this.algorithm = algorithm;
-		//this.validation = validation;
 		attributes = new ArrayList<String>();
 		numInstance = 0;
 		readDataSet();
@@ -46,9 +42,8 @@ public class ClassifierApplication
 		dataSet.close();
 	}
 	
-	public void run() throws IOException
+	public void run(int folds) throws IOException
 	{
-		int folds =10;
 		double accuracySum =0;
 		int instanceNumber;
 		int strat[] = new int[folds];
@@ -98,7 +93,6 @@ public class ClassifierApplication
 			}
 			dataSet.close();
 			nb.training();
-			System.out.println(nb);
 			
 			//testing
 			readDataSet();
@@ -136,8 +130,8 @@ public class ClassifierApplication
 	}
 	
 	public static void main(String[] args) throws IOException
-	{
-		ClassifierApplication classifier = new ClassifierApplication(args[0]);
-		classifier.run();
+	{System.out.println(args[0]);
+		NB_KFold classifier = new NB_KFold(args[0]);
+		classifier.run(Integer.parseInt(args[1]));
 	}
 }
